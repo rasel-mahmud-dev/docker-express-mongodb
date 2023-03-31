@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+
+  # mongodb services
+  mongo_db:
+    container_name: mongo_container 
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27018:27017
+    volumes:
+      - /app/mongo_db:/data/db
+
+
+  # nodejs api container 
+  api:
+    build: .
+    command: nodemon -L server.js
+    ports:
+      - 4000:3000
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo_db
