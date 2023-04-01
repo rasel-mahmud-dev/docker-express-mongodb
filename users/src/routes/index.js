@@ -15,7 +15,7 @@ const router = express.Router()
 
 router.use("/api/calendar", calendarRoute)
 router.use("/api/activities", activityRoute)
-router.use("/api/auth", authRoute)
+router.use("/api/users", authRoute)
 
 
 

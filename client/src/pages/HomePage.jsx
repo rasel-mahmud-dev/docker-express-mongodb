@@ -1,14 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Posts from "../components/Posts";
+import Product from "../components/Products";
 import axios from "axios";
 import Header from "../components/Header";
 import {AppContext} from "../store/AppContext";
+import api from "../apis/axios";
 
 const HomePage = () => {
 	
 	const [count, setCount] = useState(0)
 	
-	const [posts, setPosts] = useState([])
+	const [products, setProducts] = useState([])
 	
 	const [{auth}] = useContext(AppContext)
 	
@@ -20,7 +21,7 @@ const HomePage = () => {
 		const title = e.target.title.value
 		const description = e.target.description.value
 		if(!auth) return alert("Please Login first");
-		let {status, data} = await axios.post("http://localhost:2000/api/posts", {title, description, userId: auth._id})
+		let {status, data} = await axios.post("http://localhost:2000/api/products", {title, description, userId: auth._id})
 		console.log(data, status)
 	}
 	
@@ -31,9 +32,9 @@ const HomePage = () => {
 	
 	async function fetchPosts(){
 		try{
-			let {status, data} = await axios.get("http://localhost:2000/api/posts")
+			let {status, data} = await api.get("/api/products")
 			if(status === 200){
-				setPosts(data.posts)
+				setProducts(data.products)
 			}
 		} catch (ex){
 		
@@ -42,13 +43,13 @@ const HomePage = () => {
 	
 	
 	return (
-		<div>
-			<Header />
+		<div className="container">
+
 			
 			
 			<div className="flex justify-between mt-10">
-				<h4 className="font-medium text-lg text-white text-center ">All Posts</h4>
-				<label htmlFor="my-modal-4" className="btn">Add Post</label>
+				<h4 className="font-semibold text-2xl text-gray-700 text-center ">Products</h4>
+				{/*<label htmlFor="my-modal-4" className="btn">Add Product</label>*/}
 			
 			</div>
 			
@@ -58,7 +59,7 @@ const HomePage = () => {
 				<label className="modal-box relative" htmlFor="">
 					<div className="rounded-xl">
 						
-						<h4 className="font-medium text-lg text-white text-center ">Add Post</h4>
+						{/*<h4 className="font-medium text-lg text-white text-center ">Add Product</h4>*/}
 						
 						<form onSubmit={addPostHandler} className="mt-5">
 							<input name="title" type="text" placeholder="Title"
@@ -73,10 +74,8 @@ const HomePage = () => {
 				
 				</label>
 			</label>
-			
-			
-			
-			<Posts posts={posts} />
+
+			<Product products={products} />
 		</div>
 	);
 };

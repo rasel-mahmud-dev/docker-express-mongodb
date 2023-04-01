@@ -5,12 +5,11 @@ users-services/node_modules
 posts/node_modules
 client/node_modules
 comments/node_modules
-frontend/node_modules
 products/node_modules
 
 
 
-
+node_modules**
 
 
 

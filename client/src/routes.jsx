@@ -2,8 +2,10 @@ import Main from "./layout/Main";
 
 import {createBrowserRouter} from "react-router-dom"
 import HomePage from "./pages/HomePage";
-import PostDetail from "./pages/PostDetail";
+import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
+import Order from "./pages/Order";
+import Carts from "./pages/Carts";
 
 const routes = createBrowserRouter([
 	{
@@ -18,10 +20,21 @@ const routes = createBrowserRouter([
 			},
 			{
 				
-				path: "posts/:postId",
-				element: <PostDetail/>,
+				path: "p/:slug",
+				element: <ProductDetail/>,
 				
+			},	{
+
+				path: "orders",
+				element: <Order/>,
+
 			},{
+
+				path: "carts",
+				element: <Carts/>,
+
+			},
+			{
 				
 				path: "login",
 				element: <Login/>,

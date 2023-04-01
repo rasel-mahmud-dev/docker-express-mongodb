@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import axios from "axios";
 import {AppContext} from "../store/AppContext";
 import {useNavigate} from "react-router-dom";
+import api from "../apis/axios";
 
 const Login = () => {
 	
@@ -14,16 +15,15 @@ const Login = () => {
 		let email = e.target.email.value
 		let password = e.target.password.value
 		
-		let {status, data} = await axios.post("http://localhost:2003/api/auth/login", {email, password})
+		let {status, data} = await api.post("http://localhost:2003/api/users/login", {email, password})
 		if (status === 201) {
-			localStorage.setItem("app_token", data.token)
+			localStorage.setItem("token", data.token)
 			setState(prev=>({
 				...prev,
 				auth: data
 			}))
 			
 			navigate("/")
-			
 		}
 	}
 	
