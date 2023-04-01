@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import api from "../apis/axios";
+import {BiTrash} from "react-icons/all";
 
 
 const Order = () => {
@@ -23,7 +24,16 @@ const Order = () => {
         }
     }
 
+    async function handleDeleteOrder(item){
+        try {
+            let {status, data} = await api.get("http://localhost:2011/api/orders/"+item._id)
+            if (status === 201) {
+                setOrders(prev=>(prev.filter(i=>i._id!== item._id)))
+            }
+        } catch (ex) {
 
+        }
+    }
 
 
     return (
@@ -41,6 +51,7 @@ const Order = () => {
                         <th>Price</th>
                         <th>Order At</th>
                         <th>Quantity</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -51,6 +62,9 @@ const Order = () => {
                                 <td>TK. {order?.price}</td>
                                 <td>{new Date(order?.createdAt).toDateString()}</td>
                                 <td>{order.quantity}</td>
+                                <td>
+                                    <BiTrash  onClick={()=>handleDeleteOrder(order)}/>
+                                </td>
                         </tr>
                             ))}
                     </tbody>

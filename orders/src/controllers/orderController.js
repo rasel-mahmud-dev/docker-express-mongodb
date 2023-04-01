@@ -9,59 +9,15 @@ exports.getAllOrders = async function (req, res, next) {
     }
 }
 
-// exports.getPostDetail = async function (req, res, next) {
-//
-//     const {postId} = req.params
-//
-//     try {
-//         const post = await Post.findOne({_id: postId})
-//         res.status(200).send({post: post})
-//     } catch (ex) {
-//         next(ex)
-//     }
-// }
 
 
-exports.createOrder = async function (req, res, next) {
-    const {
-        title,
-        price,
-        stock,
-        userId
-    } = req.body
-
-
+exports.deleteOrder = async function (req, res, next) {
     try {
-
-        let newPost = new Order({
-            userId: userId,
-            title,
-            price,
-            stock
-        })
-
-        newPost = await newPost.save()
-        if (newPost) {
-            res.status(201).send(newPost)
-        }
-
+        await Order.deleteOne({_id: req.params.orderId, customerId: req.user._id})
+        res.status(201).send({success: "ok"})
     } catch (ex) {
         next(ex)
     }
 }
 
 
-//
-// exports.buyProducts = async function (req, res, next) {
-//     const { productIds } = req.body
-//
-//
-//     try {
-//
-//
-//
-//     } catch (ex) {
-//         next(ex)
-//     }
-// }
-//
