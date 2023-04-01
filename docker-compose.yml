@@ -1,26 +1,52 @@
 version: "3.9"
 services:
 
-  # mongodb services
-  mongo_db:
-    container_name: mongo_container 
-    image: mongo:latest
-    restart: always
-    ports:
-      - 27018:27017
-    volumes:
-      - /app/mongo_db:/data/db
+# mongodb services
+#  mongo_db:
+#    container_name: mongo_container
+#    image: mongo:latest
+#    restart: always
+#    ports:
+#      - 27018:27017
+#    volumes:
+#      - /app/mongo_db:/data/db
+#
 
-
-  # nodejs api container 
-  api:
-    build: .
-    command: nodemon -L server.js
+  # nodejs users services
+  user-services:
+    build: ./users
+    command: nodemon -L src/server.js
     ports:
-      - 4000:3000
+      - 2003:2003
     volumes:
-      - .:/app
+      - ./users:/app/users
     env_file:
-      - ./.env
-    depends_on:
-      - mongo_db
+      - ./users/.env
+#    depends_on:
+#      - mongo_db
+
+  # nodejs posts_services container
+  posts_services:
+    build: ./posts
+    command: nodemon -L src/server.js
+    ports:
+      - 2000:2000
+    volumes:
+      - ./posts:/app/posts
+    env_file:
+      - ./posts/.env
+#    depends_on:
+#      - mongo_db
+
+  # nodejs comments_services container
+  comments_services:
+    build: ./comments
+    command: nodemon -L src/server.js
+    ports:
+      - 2001:2001
+    volumes:
+      - ./comments:/app/comments
+    env_file:
+      - ./comments/.env
+#    depends_on:
+#      - mongo_db
