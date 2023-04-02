@@ -36,7 +36,9 @@ exports.createCart = async function (req, res, next) {
     const {productId} = req.body
 
     try {
-        // call order services for create order
+    
+        
+        // take product information for add to cart
         channel.sendToQueue("product_info", Buffer.from(productId))
 
         // delete create_order_done message from queue

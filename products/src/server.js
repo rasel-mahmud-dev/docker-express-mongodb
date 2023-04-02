@@ -31,9 +31,9 @@ app.listen(PORT, async ()=> {
         let productId = msg.content.toString()
         let data = await getProductDetail(productId)
         if(data){
-           await channel.sendToQueue("product_info_received", Buffer.from(JSON.stringify(data)), {noAck: true})
+           await channel.sendToQueue("product_info_received", Buffer.from(JSON.stringify(data)))
         } else{
-            await channel.sendToQueue("product_info_received", Buffer.from(""), {noAck: true})
+            await channel.sendToQueue("product_info_received", Buffer.from(""))
         }
     })
     

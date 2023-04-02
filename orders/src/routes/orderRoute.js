@@ -6,7 +6,7 @@ const auth = require("../middlewares/auth")
 
 const router = express.Router()
 
-router.get("/",    getAllOrders)
+router.get("/",    auth, getAllOrders)
 router.delete("/:orderId", auth,  deleteOrder)
 
 

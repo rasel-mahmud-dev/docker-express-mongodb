@@ -8,7 +8,7 @@ function connectAmqp(){
     return new Promise(async (resolve, reject)=>{
         try{
            if(!channel){
-               const connection = await amqp.connect("amqp://0.0.0.0:5672")
+               const connection = await amqp.connect("amqp://localhost:5672")
                channel = await connection.createChannel()
                resolve(channel)
                

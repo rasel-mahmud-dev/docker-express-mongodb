@@ -6,6 +6,12 @@ docker compose up --build
 ```
 
 
+```shell
+# rum rabbitMQ server
+docker compose -f rabbitmq.yml up
+```
+
+
 ### List of images
 
 ```sh
