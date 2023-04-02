@@ -1,52 +1,65 @@
 version: "3.9"
 services:
 
-# mongodb services
-#  mongo_db:
-#    container_name: mongo_container
-#    image: mongo:latest
+  # mongodb services
+  #  mongo_db:
+  #    container_name: mongo_container
+  #    image: mongo:latest
+  #    restart: always
+  #    ports:
+  #      - 27018:27017
+  #    volumes:
+  #      - /app/mongo_db:/data/db
+  #
+
+#  user-services:
+#    build: ./users
 #    restart: always
+#    command: nodemon -L src/server.js
 #    ports:
-#      - 27018:27017
+#      - 2003:2003
 #    volumes:
-#      - /app/mongo_db:/data/db
+#      - ./users:/app/users
+#    env_file:
+#      - ./users/.env
+##    depends_on:
+##      - rabbitmq
+
 #
+#  products_services:
+#    build: ./products
+#    restart: always
+#    command: nodemon -L src/server.js
+#    ports:
+#      - 2010:2010
+#    volumes:
+#      - ./products:/app/products
+#    env_file:
+#      - ./products/.env
 
-  # nodejs users services
-  user-services:
-    build: ./users
+
+
+  orders_services:
+    build: orders
+    restart: on-failure
     command: nodemon -L src/server.js
     ports:
-      - 2003:2003
+      - 2013:2013
     volumes:
-      - ./users:/app/users
+      - ./orders:/app/orders
     env_file:
-      - ./users/.env
-#    depends_on:
-#      - mongo_db
+      - orders/.env
 
-  # nodejs posts_services container
-  posts_services:
-    build: ./posts
-    command: nodemon -L src/server.js
-    ports:
-      - 2000:2000
-    volumes:
-      - ./posts:/app/posts
-    env_file:
-      - ./posts/.env
-#    depends_on:
-#      - mongo_db
 
-  # nodejs comments_services container
-  comments_services:
-    build: reviews
-    command: nodemon -L src/server.js
-    ports:
-      - 2001:2001
-    volumes:
-      - ./reviews:/app/reviews
-    env_file:
-      - reviews/.env
-#    depends_on:
-#      - mongo_db
+#  cart_services:
+#    build: carts
+#    restart: always
+#    command: nodemon -L src/server.js
+#    ports:
+#      - 2014:2014
+#    volumes:
+#      - ./carts:/app/carts
+#    env_file:
+#      - carts/.env
+##    depends_on:
+##      - rabbitmq

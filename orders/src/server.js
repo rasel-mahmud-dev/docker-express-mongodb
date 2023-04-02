@@ -21,6 +21,7 @@ app.listen(PORT, async ()=> {
     await channel.assertQueue("create_order", {durable: false})
     await channel.assertQueue("delete_order", {durable: false})
 
+    console.log("connect rabbitmq server")
     
     // create order subscriber
     await channel.consume("create_order", async (msg) => {
