@@ -1,12 +1,11 @@
-const prismaClient = require("../../prisma/prismaClient");
+
+const Order = require("../models/Order")
 
 
 exports.getAllOrders = async function (req, res, next) {
     try {
-        const orders = await prismaClient.order.findMany({
-            where: {
-                userId: req.params.userId
-            }
+        const orders = await Order.find({
+            userId: req.params.userId
         })
         res.status(200).send({orders})
     } catch (ex) {
@@ -17,12 +16,10 @@ exports.getAllOrders = async function (req, res, next) {
 
 exports.deleteOrder = async function (req, res, next) {
     try {
-        let id = Number(req.params.orderId)
-        let order = await prismaClient.order.deleteMany({
-            where: {
-                id: id,
-                customerId: req.user._id
-            }
+        let _id = req.params.orderId
+        let order = await Order.deleteOne({
+            _id,
+            customerId: req.user._id
         })
         res.status(201).send({success: "ok"})
     } catch (ex) {

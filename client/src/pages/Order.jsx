@@ -26,9 +26,9 @@ const Order = () => {
 
     async function handleDeleteOrder(item){
         try {
-            let {status, data} = await api.delete("api/orders/"+item.id)
+            let {status, data} = await api.delete("api/orders/"+item._id)
             if (status === 201) {
-                setOrders(prev=>(prev.filter(i=>i.id !== item.id)))
+                setOrders(prev=>(prev.filter(i=>i._id !== item._id)))
             }
         } catch (ex) {
 
@@ -55,9 +55,9 @@ const Order = () => {
                     </tr>
                     </thead>
                     <tbody>
-                            {orders.map((order)=>(
+                            {orders.map((order, index)=>(
                         <tr>
-                                <td>{order.id}</td>
+                                <td>{index + 1}</td>
                                 <td>{order?.title || "No title"}</td>
                                 <td>TK. {order?.price}</td>
                                 <td>{new Date(order?.createdAt).toDateString()}</td>

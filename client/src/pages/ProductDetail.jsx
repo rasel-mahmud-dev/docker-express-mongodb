@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from "axios";
 import {Link, useParams} from "react-router-dom";
 import api from "../apis/axios";
 import {toast} from "react-toastify";
+import appContext, {AppContext} from "../store/AppContext";
 
 
 const desc = `
@@ -20,7 +21,9 @@ Sed hendrerit. Praesent egestas neque eu enim. Pellentesque libero tortor, tinci
 
 const ProductDetail = () => {
     const {slug} = useParams()
-    
+
+    const [{}, setState]  = useContext(AppContext)
+
     const [comments, setComments] = useState([])
     const [totalComment, setTotalComment] = useState(0)
 
@@ -100,6 +103,12 @@ const ProductDetail = () => {
             })
             
             if(status === 201){
+
+                    setState(prev=>({
+                        ...prev,
+                        totalCarts: prev.totalCarts + 1
+                    }))
+
                 toast.success("Product successfully added in cart");
             }
             

@@ -1,6 +1,4 @@
-// const Order = require("../models/Order");
-
-const prismaClient = require("../../prisma/prismaClient");
+const Order = require("../models/Order")
 
 function createOrder(productData) {
 	return new Promise(async (resolve, reject) => {
@@ -15,16 +13,16 @@ function createOrder(productData) {
 		
 		try {
 			
-			let newOrder = await prismaClient.order.create({
-				data: {
-					customerId,
-					title,
-					price: Number(price),
-					quantity: Number(quantity),
-					productId,
-				}
+			let newOrder = new Order({
+				title,
+				price: Number(price),
+				quantity: Number(quantity),
+				productId,
+				customerId: customerId
 			})
-			
+
+			newOrder = await newOrder.save();
+
 			if (newOrder) {
 				resolve(newOrder)
 			} else {

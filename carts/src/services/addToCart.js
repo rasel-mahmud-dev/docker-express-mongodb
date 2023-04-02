@@ -1,4 +1,4 @@
-const prismaClient = require("../../prisma/prismaClient");
+const Cart = require("../models/Cart");
 
 function addToCart(productData) {
 	console.log(productData)

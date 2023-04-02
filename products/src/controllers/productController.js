@@ -3,11 +3,10 @@ const Product = require("../models/Product");
 const connectAmqp = require("../rabbiMq/connectAmqp")
 
 
-let channel, newCart;
+let channel, newOrder = {};
 
 (async function(){
 	channel = await connectAmqp()
-	// await channel.assertQueue("create_order")
 	await channel.assertQueue("create_order_done")
 	await channel.assertQueue("added_cart_done")
 }())
@@ -38,7 +37,6 @@ exports.getProductDetail = async function (req, res, next) {
 
 
 exports.createProduct = async function (req, res, next) {
-	
 	const {
 		title,
 		price,
@@ -78,7 +76,6 @@ exports.buyProducts = async function (req, res, next) {
 		
 		// call order services for create order
 		channel.sendToQueue("create_order", Buffer.from(JSON.stringify({
-			message: "hi from product services",
 			productId: product._id,
 			price: product.price,
 			title: product.title,
@@ -88,9 +85,14 @@ exports.buyProducts = async function (req, res, next) {
 		
 		// delete create_order_done message from queue
 		channel.consume("create_order_done", function (data) {
-			newOrder = JSON.parse(data.content);
-			console.log("order create done, order id:", newOrder.id)
-			channel.ack(data);
+
+			try{
+				newOrder = JSON.parse(data.content.toString());
+				console.log("order create done, order id:", newOrder.id)
+				channel.ack(data);
+			} catch (ex){
+				console.log(ex)
+			}
 		});
 		
 		res.status(201).json({order: newOrder, message: "Order created."})

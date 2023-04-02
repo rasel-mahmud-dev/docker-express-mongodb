@@ -1,10 +1,18 @@
 const app = require("./app/app")
 
-const PORT  = process.env.PORT || 2011
+const PORT  = process.env.PORT || 2013
 
 const amqp = require("amqplib")
 const createOrder = require("./services/createOrder");
-const prismaClient = require("../prisma/prismaClient");
+const mongoose = require("mongoose");
+
+
+mongoose.connect(process.env.MONGODB_URL).then(()=>{
+    console.log("mongodb connected")
+}).catch(ex=>{
+    console.log("database connection fail")
+})
+
 
 app.listen(PORT, async ()=> {
     
@@ -31,7 +39,6 @@ app.listen(PORT, async ()=> {
         console.log("delete order")
     })
 
-    
     console.log(`server is running on port ${PORT}`)
 } )
 

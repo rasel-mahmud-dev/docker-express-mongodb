@@ -4,7 +4,7 @@ import api from "../apis/axios";
 
 const Carts = () => {
 
-    const [orders, setOrders] = useState([])
+    const [carts, setCarts] = useState([])
     const [total, setTotal] = useState(0)
 
     useEffect(() => {
@@ -14,9 +14,9 @@ const Carts = () => {
 
     async function fetchCarts(){
         try {
-            let {status, data} = await api.get("http://localhost:2011/api/carts")
+            let {status, data} = await api.get("/api/carts")
             if (status === 200) {
-                setOrders(data.orders)
+                setCarts(data.carts)
             }
         } catch (ex) {
 
@@ -35,18 +35,16 @@ const Carts = () => {
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Price</th>
+                        <th>Product ID</th>
                         <th>Order At</th>
                         <th>Quantity</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.map((order)=>(
+                    {carts && carts.map((order)=>(
                         <tr>
                             <td>{order._id}</td>
-                            <td>{order?.title || "No title"}</td>
-                            <td>TK. {order?.price}</td>
+                            <td>{order?.productId}</td>
                             <td>{new Date(order?.createdAt).toDateString()}</td>
                             <td>{order.quantity}</td>
                         </tr>

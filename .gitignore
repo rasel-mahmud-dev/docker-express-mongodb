@@ -1,7 +1,13 @@
 
+products/node_modules
+users/node_modules
+carts/node_modules
+orders/node_modules
+reviews/node_modules
+client/node_modules
+comments/node_modules
+posts/node_modules
 
-
-node_modules**
 
 
 

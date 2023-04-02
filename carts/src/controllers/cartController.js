@@ -1,107 +1,84 @@
-const prismaClient = require("../../prisma/prismaClient");
 const connectAmqp = require("../rabbiMq/connectAmqp");
+const Cart = require("../models/Cart");
 
 
-let channel;
+let channel, productDetail;
 
 (async function () {
-	channel = await connectAmqp()
-	channel.assertQueue("product_info_received")
+    channel = await connectAmqp()
+    channel.assertQueue("product_info_received")
 }())
 
+exports.countCartItems = async function (req, res, next) {
+    try {
+        const count = await Cart.countDocuments({
+            customerId: req.user._id
+        })
+        res.status(200).send({count: count})
+    } catch (ex) {
+        next(ex)
+    }
+}
 
 exports.getCartItems = async function (req, res, next) {
-	try {
-		const orders = await prismaClient.cartItem.findMany({
-			where: {
-				userId: req.params.userId
-			}
-		})
-		res.status(200).send({orders})
-	} catch (ex) {
-		next(ex)
-	}
+    try {
+        const carts = await Cart.find({
+            customerId: req.user._id
+        })
+        res.status(200).send({carts})
+    } catch (ex) {
+        next(ex)
+    }
 }
 
 
 exports.createCart = async function (req, res, next) {
-	const {productId} = req.body
-	
-	let products = []
-	
-	
-	try {
-		
-		// now we need product information
-		await channel.sendToQueue("product_info", Buffer.from(productId))
-		
-		
-		// delete create_order_done message from queue
-		let data = await productDetailMessage(channel)
-		// channel.ackAll(data)
-		
-		let product = JSON.parse(data.content.toString())
-		console.log(product)
-		res.status(201).json({cart: {
-			message: "done"
-		}})
-		
-		// if(!product) {
-		// 	res.send(404).json({message: "Product add to cart fail"})
-		// }
-		
-		
-		// res.send(product)
-		
-		
-		
-		// let id = Number(req.params.cartId)
-		// let order = await prismaClient.cartItem.deleteMany({
-		//     where: {
-		//         id: id,
-		//         customerId: req.user._id
-		//     }
-		// })
-		// res.status(201).send({success: "ok"})
-	} catch (ex) {
-		res.status(500).json({message: ex.message})
-	}
-}
+    const {productId} = req.body
 
+    try {
+        // call order services for create order
+        channel.sendToQueue("product_info", Buffer.from(productId))
 
-function productDetailMessage(channel) {
-	return new Promise(async (resolve, reject) => {
-		try {
-			channel.consume("product_info_received", async function (data) {
-				if (!data) {
-					console.error('Consumer cancelled by server!');
-					reject(null)
-				}
-				
-				resolve(data)
-			});
-		} catch (ex) {
-			reject(null)
-		}
-		
-	})
+        // delete create_order_done message from queue
+        channel.consume("product_info_received", async function (data) {
+            try {
+                productDetail = JSON.parse(data.content.toString());
+                channel.ack(data);
+
+                if (productDetail) {
+                    let newItem = new Cart({
+                        productId: productDetail._id,
+                        quantity: productDetail?.quantity || 1,
+                        customerId: req?.user?._id
+                    })
+
+                    newItem = await newItem.save()
+                }
+
+            } catch (ex) {
+                console.log(ex)
+            }
+        });
+
+        res.status(201).json({order: productDetail, message: "Product added to cart successfully."})
+
+    } catch (ex) {
+        res.status(500).json({message: ex.message})
+    }
 }
 
 
 exports.deleteCartItem = async function (req, res, next) {
-	try {
-		let id = Number(req.params.cartId)
-		let order = await prismaClient.cartItem.deleteMany({
-			where: {
-				id: id,
-				customerId: req.user._id
-			}
-		})
-		res.status(201).send({success: "ok"})
-	} catch (ex) {
-		console.log(ex)
-		next(ex)
-	}
+    try {
+        let id = req.params.cartId
+        let order = await Cart.deleteOne({
+            _id: id,
+            customerId: req.user._id
+        })
+        res.status(201).send({success: "ok"})
+    } catch (ex) {
+        next(ex)
+    }
 }
 
 

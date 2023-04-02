@@ -10,24 +10,32 @@ const Main = () => {
 	const [state, setState] = useContext(AppContext)
 	
 	useEffect(()=>{
-		let token = localStorage.getItem("app_token") || ""
-		api.get("http://localhost:2003/api/users/verify", {
-			headers: {
-				"authorization": token
-			}
-		}).then(({data, status})=>{
-	
+
+		api.get("/api/users/verify").then(({data, status})=>{
 			if(status === 201){
 				setState(prev=>({
 					...prev,
 					auth: data
 				}))
 			}
-			
-			
 		}).catch(ex=>{
 			console.log(ex)
 		})
+
+
+		api.get("/api/carts/count").then(({data, status})=>{
+			if(status === 200){
+				setState(prev=>({
+					...prev,
+					totalCarts: data.count
+				}))
+			}
+		}).catch(ex=>{
+			console.log(ex)
+		})
+
+
+
 	}, [])
 	
 	

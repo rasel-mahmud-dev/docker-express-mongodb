@@ -9,9 +9,8 @@ const HomePage = () => {
 	
 	const [count, setCount] = useState(0)
 	
-	const [products, setProducts] = useState([])
-	
-	const [{auth}] = useContext(AppContext)
+
+	const [{auth, products}, setState] = useContext(AppContext)
 	
 
 	
@@ -26,7 +25,9 @@ const HomePage = () => {
 	}
 	
 	useEffect(()=>{
-		fetchPosts()
+		if(products.length === 0){
+			fetchPosts()
+		}
 	}, [])
 	
 	
@@ -34,7 +35,10 @@ const HomePage = () => {
 		try{
 			let {status, data} = await api.get("/api/products")
 			if(status === 200){
-				setProducts(data.products)
+				setState(prev=>({
+					...prev,
+					products: data.products
+				}))
 			}
 		} catch (ex){
 		

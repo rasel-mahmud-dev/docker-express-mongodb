@@ -5,7 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 
 const Header = () => {
 	
-	const [{auth}, setState] = useContext(AppContext)
+	const [{auth, totalCarts}, setState] = useContext(AppContext)
 	const navigate = useNavigate()
 	
 	function handleLogout(e) {
@@ -17,7 +17,10 @@ const Header = () => {
 		
 		navigate("/login")
 	}
-	
+
+
+	console.log(totalCarts)
+
 	return (
 		<div>
 			<header className="bg-primary z-1000 fixed top-0 left-0 w-full flex justify-between items-center px-8 py-4">
@@ -52,7 +55,10 @@ const Header = () => {
 								<span>Orders</span>
 							</Link>
 						</li>
-						<li className="nav_link">
+						<li className="nav_link relative">
+
+							{totalCarts > 0 && <div className="badge badge-secondary absolute -top-4 left-2 !text-xs">{totalCarts}</div> }
+
 							<Link to="/carts">
 								<FiShoppingCart/>
 								<span>Shopping Carts</span>
