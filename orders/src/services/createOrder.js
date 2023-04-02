@@ -1,35 +1,40 @@
-const Order = require("../models/Order");
+// const Order = require("../models/Order");
 
-function createOrder (productData) {
-    return new Promise(async (resolve, reject)=>{
-        const {
-            productId,
-            price,
-            title,
-            quantity = 1,
-            customerId
-        } = productData
+const prismaClient = require("../../prisma/prismaClient");
 
-
-        try {
-
-            let newPost = new Order({
-                customerId,
-                title,
-                price,
-                quantity,
-                productId,
-            })
-
-            newPost = await newPost.save()
-            if (newPost) {
-                resolve(newPost)
-            }
-
-        } catch (ex) {
-            reject({message: "Order creation fail"})
-        }
-    })
+function createOrder(productData) {
+	return new Promise(async (resolve, reject) => {
+		const {
+			productId,
+			price,
+			title,
+			quantity = 1,
+			customerId
+		} = productData
+		
+		
+		try {
+			
+			let newOrder = await prismaClient.order.create({
+				data: {
+					customerId,
+					title,
+					price: Number(price),
+					quantity: Number(quantity),
+					productId,
+				}
+			})
+			
+			if (newOrder) {
+				resolve(newOrder)
+			} else {
+				reject({message: "Order creation fail"})
+			}
+			
+		} catch (ex) {
+			reject({message: "Order creation fail"})
+		}
+	})
 }
 
 module.exports = createOrder

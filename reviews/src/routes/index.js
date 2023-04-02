@@ -7,7 +7,7 @@ const commentsRoute  = require("../routes/commentsRoute")
 const router = express.Router()
 
 
-router.use("/api/comments", commentsRoute)
+router.use("/api/reviews", commentsRoute)
 
 
 module.exports = router

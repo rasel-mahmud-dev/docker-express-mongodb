@@ -20,16 +20,7 @@ Sed hendrerit. Praesent egestas neque eu enim. Pellentesque libero tortor, tinci
 
 const ProductDetail = () => {
     const {slug} = useParams()
-
-    const [auth, setAuth] = useState({
-        "_id": "641d8088f8f8ad5a370429a2",
-        "firstName": "Rasel ",
-        "lastName": "Mahmud ",
-        "email": "rasel@gmail.com",
-        "password": "123",
-        "avatar": "https://res.cloudinary.com/rasel/image/upload/v1679941585/app/core-avatar-hd.jpg"
-    })
-
+    
     const [comments, setComments] = useState([])
     const [totalComment, setTotalComment] = useState(0)
 
@@ -38,9 +29,6 @@ const ProductDetail = () => {
 
     useEffect(() => {
         fetchPost(slug)
-
-        // fetchComments(productId)
-
     }, [slug])
 
 
@@ -92,15 +80,35 @@ const ProductDetail = () => {
                 productId: postDetail._id,
                 quantity: 1
             })
+            
+            if(status === 201){
+                toast.success("Your order is create successfully");
+            }
 
-            const notify = () => toast("Wow so easy!");
-        } catch (ex){
-            console.log(ex.response?.data)
+        } catch (ex) {
             toast.error(ex.response?.data?.message)
         }
-
     }
-
+    
+    
+    async function addToCartHandler(){
+        
+        try {
+            let {data, status} = await api.post("/api/carts", {
+                productId: postDetail._id,
+                quantity: 1
+            })
+            
+            if(status === 201){
+                toast.success("Product successfully added in cart");
+            }
+            
+        } catch (ex) {
+            toast.error(ex.response?.data?.message)
+        }
+    }
+    
+    
     return postDetail && (
         <div className="max-w-5xl mx-auto mt-10">
 
@@ -127,8 +135,8 @@ const ProductDetail = () => {
 
 
                     <div className="flex items-center gap-x-2 mt-8">
-                        <button type="submit" className="mt-2 btn btn-primary" onClick={buyNowHandler}>Buy Now</button>
-                        <button type="submit" className="mt-2 btn btn-primary">Add to Cart</button>
+                        <button type="submit" className="mt-2 btn btn-secondary" onClick={buyNowHandler}>Buy Now</button>
+                        <button type="submit" className="mt-2 btn btn-primary" onClick={addToCartHandler}>Add to Cart</button>
                     </div>
                 </div>
 

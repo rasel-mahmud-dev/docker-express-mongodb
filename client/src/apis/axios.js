@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const backend = "http://localhost:2010"
+export const backend = import.meta.env.VITE_API_SERVER
 
 
 const api = axios.create({

@@ -40,13 +40,13 @@ services:
 
   # nodejs comments_services container
   comments_services:
-    build: ./comments
+    build: reviews
     command: nodemon -L src/server.js
     ports:
       - 2001:2001
     volumes:
-      - ./comments:/app/comments
+      - ./reviews:/app/reviews
     env_file:
-      - ./comments/.env
+      - reviews/.env
 #    depends_on:
 #      - mongo_db

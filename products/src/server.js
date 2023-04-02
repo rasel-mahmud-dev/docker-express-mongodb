@@ -4,6 +4,8 @@ const app = require("./app/app")
 const PORT  = process.env.PORT || 2010
 
 const amqp = require("amqplib")
+const connectAmqp = require("./rabbiMq/connectAmqp");
+const getProductDetail = require("./services/getProductDetail");
 
 let channel;
 
@@ -19,9 +21,22 @@ let channel;
 // }
 
 
-
-app.listen(PORT, ()=> {
-    // connect()
+app.listen(PORT, async ()=> {
+    
+   let channel = await connectAmqp()
+    await channel.assertQueue("product_info")
+    // await channel.assertQueue("product_info_received", {durable: true})
+    
+    channel.consume("product_info", async (msg)=>{
+        let productId = msg.content.toString()
+        let data = await getProductDetail(productId)
+        if(data){
+           await channel.sendToQueue("product_info_received", Buffer.from(JSON.stringify(data)), {noAck: true})
+        } else{
+            await channel.sendToQueue("product_info_received", Buffer.from(""), {noAck: true})
+        }
+    })
+    
     console.log(`server is running on port ${PORT}`)
 } )
 

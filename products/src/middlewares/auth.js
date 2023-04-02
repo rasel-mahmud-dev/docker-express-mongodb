@@ -16,8 +16,6 @@ function auth(req, res, next) {
 	} catch (ex) {
 		return res.status(409).json({message: "Unauthorized"})
 	}
-	
-	return next()
 }
 
 
