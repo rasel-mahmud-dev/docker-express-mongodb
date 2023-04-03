@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service Products {
+  rpc Find (ProductId) returns (Product) {}
+}
+
+message ProductId {
+  string _id = 1;
+}
+
+message Product {
+  string _id = 1;
+  int32 price = 2;
+  string title = 3;
+}

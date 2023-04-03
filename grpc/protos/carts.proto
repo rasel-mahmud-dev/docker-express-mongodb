@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service Carts {
+  rpc Find (CartId) returns (Cart) {}
+}
+
+message CartId {
+  string _id = 1;
+}
+
+message Cart {
+  string _id = 1;
+  string productId = 2;
+}

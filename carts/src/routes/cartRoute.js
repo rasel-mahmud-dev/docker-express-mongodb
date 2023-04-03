@@ -5,8 +5,8 @@ const auth = require("../middlewares/auth")
 
 const router = express.Router()
 
-router.get("/", auth, getCartItems)
-router.post("/", auth, createCart)
+router.get("/",  getCartItems)
+router.post("/",  createCart)
 router.delete("/:cartId", auth, deleteCartItem)
 router.get("/count", auth, countCartItems)
 

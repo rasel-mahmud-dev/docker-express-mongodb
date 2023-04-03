@@ -1,16 +1,8 @@
 const Product = require("../models/Product");
 
-const connectAmqp = require("../rabbiMq/connectAmqp")
 
 
 let channel, newOrder = {};
-
-(async function(){
-	channel = await connectAmqp()
-	await channel.assertQueue("create_order_done")
-	await channel.assertQueue("added_cart_done")
-}())
-
 
 
 exports.getAllProduct = async function (req, res, next) {

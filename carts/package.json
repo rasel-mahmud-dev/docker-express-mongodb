@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.8.13",
+    "@grpc/proto-loader": "^0.7.6",
     "@prisma/client": "^4.12.0",
     "amqp": "^0.2.7",
     "amqplib": "^0.10.3",
